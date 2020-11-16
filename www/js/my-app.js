@@ -16,29 +16,88 @@ var app = new Framework7({
     // Add default routes
     routes: [
       {
-        path: '/about/',
-        url: 'about.html',
+        path: '/registro/',
+        url: 'registro.html',
       },
+      {
+        path:'/principal/',
+        url: 'principal.html',
+      },
+      {
+        path:'/index/',
+        url: 'index.html',
+      },
+      {
+        path:'/registroRefu/',
+        url: 'registroRefu.html'
+      }
     ]
     // ... other parameters
   });
 
 var mainView = app.views.create('.view-main');
 
-// Handle Cordova Device Ready Event
+//principal
 $$(document).on('deviceready', function() {
     console.log("Device is ready!");
+    
+    $$('#iniciar').on('click', fniniciar);
+    
+   
+    
 });
-
-// Option 1. Using one 'page:init' handler for all pages
-$$(document).on('page:init', function (e) {
-    // Do something here when page loaded and initialized
-    console.log(e);
+//index
+$$(document).on('page:init', '.page[data-name="index"]', function (e) {
+  console.log("registro");
+  $$('#iniciar').on('click', fniniciar);   
 })
 
-// Option 2. Using live 'page:init' event handlers for each page
-$$(document).on('page:init', '.page[data-name="about"]', function (e) {
-    // Do something here when page with data-name="about" attribute loaded and initialized
-    console.log(e);
-    alert('Hello');
+
+//regsitro
+$$(document).on('page:init', '.page[data-name="registro"]', function (e) {
+    console.log("registro");
+    $$('#registro').on('click', fnregistrar);   
 })
+//registrar refugio
+$$(document).on('page:init', '.page[data-name="registroRefu"]', function (e) {
+  console.log("Refu");
+  
+})
+
+
+
+function fnregistrar(){
+    email=$$('#emailregistro').val();
+    password=$$('#passregistro').val();
+
+    firebase.auth().createUserWithEmailAndPassword(email, password)
+    .then(function(){
+      mainView.router.navigate('/index/')
+    })
+    .catch(function(error) {
+      // Handle Errors here.
+      var errorCode = error.code;
+      var errorMessage = error.message;
+      alert(errorCode)
+      })
+    
+  };
+
+
+function fniniciar(){
+    email=$$('#emaillogin').val();
+    password=$$('#passlogin').val();
+
+  firebase.auth().signInWithEmailAndPassword(email, password)
+      .then(function(){
+        mainView.router.navigate('/principal/')
+      }).catch(function(error) {
+
+        // Handle Errors here.
+        var errorCode = error.code;
+        var errorMessage = error.message;
+        alert(errorCode);
+        // ...
+      });
+
+}

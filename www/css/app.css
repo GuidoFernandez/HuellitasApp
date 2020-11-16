@@ -79,9 +79,59 @@
 }
 
 
+.page{
+  background-image: linear-gradient(#FFAAEA , #FFBEEF ) ;
+}
 
 * {
 	font-family: 'Poppins', Arial, sans-serif;
 }
+
+.Welcome{
+  text-align: center;
+  font-size: 45px;
+}
+
+.contenedor{
+  background-color: aliceblue  ;
+  width: 300px;
+	border: 3px solid #ffffff ;
+	border-radius: 4px;
+	padding: 15px;
+	position: absolute;
+	top: 50%;
+	left: 50%;
+	transform: translate(-50%, -50%);
+}
+#emaillogin, #passlogin{
+  width: 100%;
+  margin: 0;
+  display: block;
+  padding-left: 0;
+  padding-right: 50px;
+
+}
+.titulor{
+  text-align: center;
+}
+
+.subtitu{
+  font-size: 14px;
+}
+.contenedor2>input{
+  
+}
+.contenedor2{
+  background-color: aliceblue  ;
+  width: 300px;
+	border: 3px solid #ffffff ;
+	border-radius: 4px;
+	padding: 15px;
+	position: absolute;
+	top: 50%;
+	left: 50%;
+	transform: translate(-50%, -50%);
+}
+
 
 
