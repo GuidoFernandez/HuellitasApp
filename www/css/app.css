@@ -81,6 +81,11 @@
 
 .page{
   background-image: linear-gradient(#FFAAEA , #FFBEEF ) ;
+  
+}
+.page-content{
+  background-image: url(/img/huellita.png);
+  background-repeat: repeat-y;
 }
 
 * {
@@ -118,9 +123,7 @@
 .subtitu{
   font-size: 14px;
 }
-.contenedor2>input{
-  
-}
+
 .contenedor2{
   background-color: aliceblue  ;
   width: 300px;
