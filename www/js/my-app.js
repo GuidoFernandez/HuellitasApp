@@ -42,7 +42,9 @@ $$(document).on('deviceready', function() {
     console.log("Device is ready!");
     
     $$('#iniciar').on('click', fniniciar);
+
     
+
    
     
 });
@@ -71,14 +73,40 @@ $$(document).on('page:init', '.page[data-name="registroRefu"]', function (e) {
 
 
 
+
 function fnregistrar(){
     email=$$('#emailregistro').val();
     password=$$('#passregistro').val();
 
     firebase.auth().createUserWithEmailAndPassword(email, password)
     .then(function(){
-      fnbase();  
-      mainView.router.navigate('/index/')
+      var db = firebase.firestore();
+    var colPersonas = db.collection('Personas');
+
+    claveDeColeccion = email;
+    nombre = $$('#NombreReg').val();
+    apellido = $$('#ApellieReg').val();
+    cel = $$('#CelReg').val();;
+
+    datos = {
+        nombre: nombre,
+        apellido: apellido,
+        cel : cel
+    }
+
+    colPersonas.doc(claveDeColeccion).set(datos)
+    .then( function() {
+        mainView.router.navigate("/panel/");
+
+
+    })
+
+    .catch( function(e) {
+
+        
+    })
+
+     
     })
     
     .catch(function(error) {
@@ -91,60 +119,50 @@ function fnregistrar(){
       
    }
  
-   function fnbase(){
-     //base de datos
-
-    var db = firebase.firestore();
-    var colUsuario = db.collection('Personas');
-
-      claveDeColeccion = email; 
-      nombre = $$('#NombreReg').val();
-      apellido = $$('#ApellieReg').val();
-      cel = $$('#CelReg').val();
-
-      datosUsuario = {
-        nombre : nombre,
-        apellido : apellido, 
-        cel : cel
-
-      }
-
-      colUsuario.doc(claveDeColeccion).set(datosUsuario)
-      .then( function() {
-       mainView.router.navigate('/index/');
-
-
-   })
-
-   .catch( function(e) {
-
-       
-   });
-};
-
-      
      
       
-  
-
-
-     
-  
-
-
-
-
-
 
 
 
  function fnregistrarRefu(){
+    NombreRefu=$$('#NombreRefu').val();
     email=$$('#emailregistroRefu').val();
     password=$$('#passregistroRefu').val();
 
     firebase.auth().createUserWithEmailAndPassword(email, password)
     .then(function(){
-      mainView.router.navigate('/index/')
+
+     
+      var db = firebase.firestore();
+      var colRefugio = db.collection('Refugios');
+
+      claveDeColeccion = NombreRefu; 
+      nombretitu = $$('#NombreTitu').val();
+      apellidotitu = $$('#ApellidoTitu').val();
+      email= $$('#emailregistroRefu').val();
+      celrefu = $$('#CelRefu').val();
+      instagramrefu= $$('#InstagramRefu').val();
+      facebookrefu=$$('#Facebookrefu').val();
+
+      datosRefugio = {
+        nombre : nombretitu,
+        apellido : apellidotitu, 
+        email : email,
+        cel : celrefu,
+        instagram : instagramrefu,
+        facebook : facebookrefu
+       
+
+      }
+
+      colRefugio.doc(claveDeColeccion).set(datosRefugio)
+      .then(function(){
+        mainView.router.navigate('/index/')
+      })
+      .catch(function(){
+        console.error(error)
+      })
+      
     })
     .catch(function(error) {
       // Handle Errors here.
