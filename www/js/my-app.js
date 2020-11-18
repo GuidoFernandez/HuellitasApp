@@ -36,7 +36,7 @@ var app = new Framework7({
   });
 
 var mainView = app.views.create('.view-main');
-
+var email, NombreRefu;
 //principal
 $$(document).on('deviceready', function() {
     console.log("Device is ready!");
@@ -53,14 +53,19 @@ $$(document).on('page:init', '.page[data-name="index"]', function (e) {
 })
 
 
-//regsitro
+//regsitro usario
 $$(document).on('page:init', '.page[data-name="registro"]', function (e) {
     console.log("registro");
-    $$('#registro').on('click', fnregistrar);   
+    $$('#registro').on('click', fnregistrar);
+    $$('#registro').on('click', fnbase);  
 })
+
+
 //registrar refugio
 $$(document).on('page:init', '.page[data-name="registroRefu"]', function (e) {
   console.log("Refu");
+
+  $$('#registroRefu').on('click', fnregistrarRefu);
   
 })
 
@@ -80,11 +85,78 @@ function fnregistrar(){
       var errorMessage = error.message;
       alert(errorCode)
       })
-    
+
+
+     
+      
+  };
+
+  
+  function fnbase(){
+      
+     //base de datos
+
+     var db = firebase.firestore();
+     var colUsuario = db.collection('Personas');
+
+       claveDeColeccion = email; 
+       nombre = $$('#NombreReg').val();
+       apellido = $$('#ApellieReg').val();
+       cel = $$('#CelReg').val();
+
+       datosUsuario = {
+         nombre : nombre,
+         apellido : apellido, 
+         cel : cel
+
+       }
+
+       colUsuario.doc(claveDeColeccion).set(datosUsuario)
+       .then( function() {
+        mainView.router.navigate('/index/');
+
+
+    })
+
+    .catch( function(e) {
+
+        
+    });
+
+
   };
 
 
+
+
+
+
+
+
+
+ function fnregistrarRefu(){
+    email=$$('#emailregistroRefu').val();
+    password=$$('#passregistroRefu').val();
+
+    firebase.auth().createUserWithEmailAndPassword(email, password)
+    .then(function(){
+      mainView.router.navigate('/index/')
+    })
+    .catch(function(error) {
+      // Handle Errors here.
+      var errorCode = error.code;
+      var errorMessage = error.message;
+      alert(errorCode)
+      })
+
+
+ } 
+
+
+
 function fniniciar(){
+    email=$$('#emailregistroRefu').val();
+    password=$$('#passregistroRefu').val();
     email=$$('#emaillogin').val();
     password=$$('#passlogin').val();
 
