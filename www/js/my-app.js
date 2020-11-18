@@ -57,7 +57,7 @@ $$(document).on('page:init', '.page[data-name="index"]', function (e) {
 $$(document).on('page:init', '.page[data-name="registro"]', function (e) {
     console.log("registro");
     $$('#registro').on('click', fnregistrar);
-    $$('#registro').on('click', fnbase);  
+ 
 })
 
 
@@ -77,8 +77,10 @@ function fnregistrar(){
 
     firebase.auth().createUserWithEmailAndPassword(email, password)
     .then(function(){
+      fnbase();  
       mainView.router.navigate('/index/')
     })
+    
     .catch(function(error) {
       // Handle Errors here.
       var errorCode = error.code;
@@ -86,46 +88,48 @@ function fnregistrar(){
       alert(errorCode)
       })
 
-
-     
       
-  };
-
-  
-  function fnbase(){
-      
+   }
+ 
+   function fnbase(){
      //base de datos
 
-     var db = firebase.firestore();
-     var colUsuario = db.collection('Personas');
+    var db = firebase.firestore();
+    var colUsuario = db.collection('Personas');
 
-       claveDeColeccion = email; 
-       nombre = $$('#NombreReg').val();
-       apellido = $$('#ApellieReg').val();
-       cel = $$('#CelReg').val();
+      claveDeColeccion = email; 
+      nombre = $$('#NombreReg').val();
+      apellido = $$('#ApellieReg').val();
+      cel = $$('#CelReg').val();
 
-       datosUsuario = {
-         nombre : nombre,
-         apellido : apellido, 
-         cel : cel
+      datosUsuario = {
+        nombre : nombre,
+        apellido : apellido, 
+        cel : cel
 
-       }
+      }
 
-       colUsuario.doc(claveDeColeccion).set(datosUsuario)
-       .then( function() {
-        mainView.router.navigate('/index/');
-
-
-    })
-
-    .catch( function(e) {
-
-        
-    });
+      colUsuario.doc(claveDeColeccion).set(datosUsuario)
+      .then( function() {
+       mainView.router.navigate('/index/');
 
 
-  };
+   })
 
+   .catch( function(e) {
+
+       
+   });
+};
+
+      
+     
+      
+  
+
+
+     
+  
 
 
 
