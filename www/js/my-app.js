@@ -36,22 +36,25 @@ var app = new Framework7({
   });
 
 var mainView = app.views.create('.view-main');
+
 var email, NombreRefu;
+
+
 //principal
 $$(document).on('deviceready', function() {
     console.log("Device is ready!");
     
     $$('#iniciar').on('click', fniniciar);
 
-    
-
+   
    
     
 });
 //index
 $$(document).on('page:init', '.page[data-name="index"]', function (e) {
   console.log("registro");
-  $$('#iniciar').on('click', fniniciar);   
+  $$('#iniciar').on('click', fniniciar);
+          
 })
 
 
@@ -70,45 +73,47 @@ $$(document).on('page:init', '.page[data-name="registroRefu"]', function (e) {
   $$('#registroRefu').on('click', fnregistrarRefu);
   
 })
-
-
-
-
-function fnregistrar(){
-    email=$$('#emailregistro').val();
-    password=$$('#passregistro').val();
-
-    firebase.auth().createUserWithEmailAndPassword(email, password)
-    .then(function(){
-      var db = firebase.firestore();
-    var colPersonas = db.collection('Personas');
-
-    claveDeColeccion = email;
-    nombre = $$('#NombreReg').val();
-    apellido = $$('#ApellieReg').val();
-    cel = $$('#CelReg').val();;
-
-    datos = {
-        nombre: nombre,
-        apellido: apellido,
-        cel : cel
-    }
-
-    colPersonas.doc(claveDeColeccion).set(datos)
-    .then( function() {
-        mainView.router.navigate("/panel/");
-
-
-    })
-
-    .catch( function(e) {
-
-        
-    })
-
      
-    })
-    
+
+
+
+
+      function fnregistrar(){
+          email=$$('#emailregistro').val();
+          password=$$('#passregistro').val();
+
+          firebase.auth().createUserWithEmailAndPassword(email, password)
+          .then(function(){
+
+            var db = firebase.firestore();
+            var colPersonas = db.collection('Personas');
+        
+            claveDeColeccion = email;
+            nombre = $$('#NombreReg').val();
+            apellido = $$('#ApelliReg').val();
+            cel = $$('#CellReg').val();
+
+            datos = {
+                nombre: nombre,
+                apellido: apellido,
+                cel: cel,
+            }
+            console.log(nombre);
+            console.log(apellido);
+            console.log(cel);
+            colPersonas.doc(claveDeColeccion).set(datos)
+            .then( function() {
+                mainView.router.navigate("/index/");
+        
+        
+            })
+        
+            .catch( function(e) {
+        
+                
+            })
+         
+          })
     .catch(function(error) {
       // Handle Errors here.
       var errorCode = error.code;
@@ -116,8 +121,7 @@ function fnregistrar(){
       alert(errorCode)
       })
 
-      
-   }
+ }
  
      
       
@@ -138,7 +142,7 @@ function fnregistrar(){
 
       claveDeColeccion = NombreRefu; 
       nombretitu = $$('#NombreTitu').val();
-      apellidotitu = $$('#ApellidoTitu').val();
+      apellidotitu = $$('#ApelliTitu').val();
       email= $$('#emailregistroRefu').val();
       celrefu = $$('#CelRefu').val();
       instagramrefu= $$('#InstagramRefu').val();
@@ -154,25 +158,35 @@ function fnregistrar(){
        
 
       }
+        console.log(NombreRefu);
+        console.log(nombretitu);
+        console.log(apellidotitu);
+        console.log(email);
+        console.log(celrefu);
+        console.log(instagramrefu);
+        console.log(facebookrefu);
 
       colRefugio.doc(claveDeColeccion).set(datosRefugio)
-      .then(function(){
-        mainView.router.navigate('/index/')
-      })
-      .catch(function(){
-        console.error(error)
-      })
-      
+      .then( function() {
+        mainView.router.navigate("/index/");
+
+
     })
-    .catch(function(error) {
+
+    .catch( function(e) {
+
+        
+    })
+ 
+  })
+      .catch(function(error) {
       // Handle Errors here.
       var errorCode = error.code;
       var errorMessage = error.message;
       alert(errorCode)
       })
 
-
- } 
+      }
 
 
 
