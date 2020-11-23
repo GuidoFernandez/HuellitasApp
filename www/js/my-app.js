@@ -40,7 +40,7 @@ var mainView = app.views.create('.view-main');
 var email, NombreRefu;
 
 
-//principal
+//principal deviceready
 $$(document).on('deviceready', function() {
     console.log("Device is ready!");
     
@@ -73,6 +73,14 @@ $$(document).on('page:init', '.page[data-name="registroRefu"]', function (e) {
   $$('#registroRefu').on('click', fnregistrarRefu);
   
 })
+
+//principal.html
+$$(document).on('page:init', '.page[data-name="principal"]', function (e) {
+  console.log("Pag Principal");
+  
+  traerDatos();
+  
+})
      
 
 
@@ -93,10 +101,12 @@ $$(document).on('page:init', '.page[data-name="registroRefu"]', function (e) {
             apellido = $$('#ApelliReg').val();
             cel = $$('#CellReg').val();
 
-            datos = {
+            datos = { 
+                email: email,
                 nombre: nombre,
                 apellido: apellido,
                 cel: cel,
+                fotoUsuario:'no'
             }
             console.log(nombre);
             console.log(apellido);
@@ -149,12 +159,16 @@ $$(document).on('page:init', '.page[data-name="registroRefu"]', function (e) {
       facebookrefu=$$('#Facebookrefu').val();
 
       datosRefugio = {
-        nombre : nombretitu,
-        apellido : apellidotitu, 
+        nombreRefu : NombreRefu,
+        nombretitu : nombretitu,
+        apellidotitu : apellidotitu, 
         email : email,
         cel : celrefu,
         instagram : instagramrefu,
-        facebook : facebookrefu
+        facebook : facebookrefu,
+        fotoRefu:'no',
+        direccion: 'no',
+        localidad:' no'
        
 
       }
@@ -208,4 +222,51 @@ function fniniciar(){
         // ...
       });
 
+}
+
+
+
+
+function traerDatos(){
+    var db = firebase.firestore();
+   
+
+   db.collection('Refugios').where("NombreRefu", "==" , true )
+  .then(function(){
+
+    var db = firebase.firestore();
+    var colRefugio = db.collection('Refugios');
+      colRefugio.get()
+        .then(function(querySnapshot){
+        querySnapshot.forEach(function(docRefu){
+        nr=docRefu.data().NombreRefu;
+        ft=docRefu.data().fotoRefu;
+        $$('#nombreusuario').html("<p>" + nr + "</p>")
+        $$('#fotoPerfil').attr('src', 'ft')
+
+    })
+    })
+       .catch(function(error){
+         console.error("Error: "+ error)
+    
+  
+  })
+  })
+  .catch(function(){
+    var db = firebase.firestore();
+    var colPersonas = db.collection('Personas')
+    colPersonas.get()
+      .then(function(querySnapshot){
+         querySnapshot.forEach(function(doc){
+          n=doc.data().nombre;
+          a=doc.data().apellido;
+          f=doc.data().fotoUsuario;
+          $$('#nombreUsuario').html("<p>" + n + " " + a + "</p>")
+          $$('#fotoPerfil').attr('src' , 'f')
+    })
+  })
+  .catch(function(error){
+    console.error("Error: "+ error)
+  });
+  }) 
 }
