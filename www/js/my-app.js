@@ -30,7 +30,12 @@ var app = new Framework7({
       {
         path:'/registroRefu/',
         url: 'registroRefu.html'
-      }
+      },
+      {
+        path:'/perfil/',
+        url: 'perfil.html'
+      },
+     
     ]
     // ... other parameters
   });
@@ -77,7 +82,7 @@ $$(document).on('page:init', '.page[data-name="registroRefu"]', function (e) {
 //principal.html
 $$(document).on('page:init', '.page[data-name="principal"]', function (e) {
   console.log("Pag Principal");
-  
+  logout();
   traerDatos();
   
 })
@@ -224,49 +229,51 @@ function fniniciar(){
 
 }
 
+function logout(){
+
+};
+
 
 
 
 function traerDatos(){
-    var db = firebase.firestore();
-   
-
-   db.collection('Refugios').where("NombreRefu", "==" , true )
-  .then(function(){
-
-    var db = firebase.firestore();
-    var colRefugio = db.collection('Refugios');
-      colRefugio.get()
-        .then(function(querySnapshot){
-        querySnapshot.forEach(function(docRefu){
-        nr=docRefu.data().NombreRefu;
-        ft=docRefu.data().fotoRefu;
-        $$('#nombreusuario').html("<p>" + nr + "</p>")
-        $$('#fotoPerfil').attr('src', 'ft')
-
-    })
-    })
-       .catch(function(error){
-         console.error("Error: "+ error)
-    
+    var traerColecciones = db.collectionGroup('Refugios').where("NombreRefu", "==" , true );
+    traerColecciones.get()
+    .then(function(){
+      var db = firebase.firestore();
+      var colRefugio = db.collection('Refugios');
+        colRefugio.get()
+          .then(function(querySnapshot){
+          querySnapshot.forEach(function(docRefu){
+          nr=docRefu.data().NombreRefu;
+          ft=docRefu.data().fotoRefu;
+          $$('#nombreusuario').html("<p>" + nr + "</p>")
+          $$('#fotoPerfil').attr('src', 'ft')
   
-  })
-  })
-  .catch(function(){
-    var db = firebase.firestore();
-    var colPersonas = db.collection('Personas')
-    colPersonas.get()
-      .then(function(querySnapshot){
-         querySnapshot.forEach(function(doc){
-          n=doc.data().nombre;
-          a=doc.data().apellido;
-          f=doc.data().fotoUsuario;
-          $$('#nombreUsuario').html("<p>" + n + " " + a + "</p>")
-          $$('#fotoPerfil').attr('src' , 'f')
+        })
+      })
+    })
+    .catch(function(){
+      traerColecciones.get()
+      var db = firebase.firestore();
+      var colPersonas = db.collection('Personas')
+      colPersonas.get()
+        .then(function(querySnapshot){
+           querySnapshot.forEach(function(doc){
+            n=doc.data().nombre;
+            a=doc.data().apellido;
+            f=doc.data().fotoUsuario;
+            $$('#nombreUsuario').html("<p>" + n + " " + a + "</p>")
+            $$('#fotoPerfil').attr('src' , 'f')
+      })
     })
   })
-  .catch(function(error){
-    console.error("Error: "+ error)
-  });
-  }) 
-}
+};
+   
+    
+
+
+
+
+   
+    
