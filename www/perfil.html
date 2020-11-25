@@ -29,12 +29,18 @@
          
         <div class="row perfilU">  
             <div class="col-100">
-                <img src="/img/HkRdbQRmg_340x340.webp"  id="fotoPerfilU" alt="">
+                <img src=""  id="fotoPerfilU" alt="">
 
+                <button id="agregarfoto"> Agrega una foto!</button>
+                
+                 <i class="fas fa-user-edit" ><a class="button popup-open" href="#" data-popup=".popup-perfil" ></a>  </a> </i> 
+               
+                
                
             </div>
             <div class="col-100 perfilN">
-                <h1 class="nombreUR">Refugio Gigolo</h1>
+                <h1 class="nombreUR"></h1>
+                <h4 class="emailP"></h4>
             </div>
             <div class="redes">
                
@@ -44,13 +50,88 @@
                 
                     <a href="" ><i class="fab fa-facebook-square col icon"></i></a>
                
+                  
                 
+                    <a href=""> <i class="fas fa-map-marker-alt col icon"> </i>   </a>
+                    
+
+
+                    <a href=""> <i class="far fa-envelope  col icon "></i> </a>
                 
-                    <a href=""  ><i class="fas fa-map-marker-alt col icon"></i></i></a>
-                
+            </div>
+
+            <div>
+                <button class="mensaje button button-raised">
+                    Envianos un mensaje!
+                </button>
             </div>
             
             
         </div>
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+             
+        <div class="popup popup-perfil">
+            <div class="block">
+              <p>Completa tu perfil!</p>
+              <!-- Close Popup -->
+              <div class="list" id="my-form">
+                <ul>
+                  <li>
+                    <div class="item-content item-input">
+                      <div class="item-inner">
+                        <div class="item-title item-label">Tu direccion!</div>
+                        <div class="item-input-wrap">
+                          <input type="text" name="direccion" placeholder="Direccion" requerid id="DireccionRf">
+                        </div>
+                      </div>
+                    </div>
+                  </li>
+                  <li>
+                    <div class="item-content item-input">
+                      <div class="item-inner">
+                        <div class="item-title item-label">Localidad</div>
+                        <div class="item-input-wrap">
+                          <input type="text" name="Localidad" placeholder="Localidad" requerid id="localidadRf">
+                        </div>
+                      </div>
+                    </div>
+                  </li>
+                  <li>
+                    <li>
+                      <div class="item-content item-input">
+                        <div class="item-inner">
+                          <div class="item-title item-label">Email</div>
+                          <div class="item-input-wrap">
+                            <input type="email" name="email" placeholder="Email" requerid id="emailregistro">
+                          </div>
+                        </div>
+                      </div>
+                    </li>
+                  </li>
+                </div>
+
+
+
+              <p><a class="link popup-close" href="#">Actuliza tu perfil!</a></p>
+            </div>
+          </div>
     </div>

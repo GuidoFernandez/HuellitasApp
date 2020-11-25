@@ -83,8 +83,20 @@ $$(document).on('page:init', '.page[data-name="registroRefu"]', function (e) {
 $$(document).on('page:init', '.page[data-name="principal"]', function (e) {
   console.log("Pag Principal");
   $$('#logout').on('click', logout);
-  traerDR();
+  
   traerDU();
+  traerDatosRefugio();
+})
+
+$$(document).on('page:init', '.page[data-name="perfil"]', function (e) {
+  console.log("Perfil");
+  $$('.popup-open').on('popup:open', function (e) {
+    console.log('About popup open');
+  });
+
+  $$('#agregarfoto').on('click', fnfoto);
+  traerDUP();
+  traerDatosRefugioPerfil();
   
 })
      
@@ -245,6 +257,7 @@ function logout(){
 };
 
 function traerDU(){
+  $$('#nombreUsuario').html(" ")
   var db = firebase.firestore();
   var colPersonas = db.collection('Personas');
     colPersonas.get()
@@ -258,19 +271,74 @@ function traerDU(){
         })
     })
 }
+function traerDUP(){
+  $$('.nombreUR').html(" ")
+  var db = firebase.firestore();
+  var colPersonas = db.collection('Personas');
+    colPersonas.get()
+    .then(function(QuerySnapshot){
+        QuerySnapshot.forEach(function(doc){
+            nombre=doc.data().nombre;
+            apellido=doc.data().apellido;
+            //fotoRefu=doc.data().apellido;
+            $$('.nombreUR').append( "<p>" + nombre + " " + apellido + "</p>")
+            
+        })
+    })
+}
 
-function traerDR(){
+function traerDatosRefugioPerfil(){ 
+  $$('.nombreUR').html(" ")
+  var db = firebase.firestore();
+  var colRefugio = db.collection('Refugios');
+    colRefugio.get()
+      .then(function(querySnapshot){
+      querySnapshot.forEach(function(doc){
+        nombreR=doc.data().nombreRefu;
+        //ft=doc.data().fotoRefu;
+        email=doc.data().email;
+        $$('.nombreUR').append("<p>" + nombreR + "</p>")
+        //$$('.emailP').append("<p>" + email + "</p>")
+        //$$('#fotoPerfil').attr('src', 'ft')
+
+  })
+  })
+     .catch(function(error){
+       console.error("Error: "+ error)
+  
+
+})
+};
+
+function traerDatosRefugio(){
+  $$('#nombreUsuario').html("  ")
   var db = firebase.firestore();
   var colRefugio = db.collection('Refugios');
   colRefugio.get()
   .then(function(QuerySnapshot){
     QuerySnapshot.forEach(function(doc){
       nombreR=doc.data().nombreRefu;
-      $$('#nombreUsuario').html("<p>" + nombreR + "</p>")
+      $$('#nombreUsuario').append("<p>" + nombreR + "</p>")
     })
   })
 }
 
+function fnfoto(){
+  navigator.camera.getPicture(onSuccess,onError,
+    {
+        quality: 50,
+        destinationType: Camera.DestinationType.FILE_URI,
+        sourceType: Camera.PictureSourceType.PHOTOLIBRARY
+    });
+}
+
+function onSuccess(imageURI){
+  $$('#fotoPerfilU').attr('src' , imageURI);
+}
+
+function onError (message){
+  console.log('Error : ' + message)
+}
 
 
 
