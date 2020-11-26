@@ -219,5 +219,12 @@
   left: 0%
 }
 
+#agregarfoto{
+  font-size: 10px;
+  position: absolute;
+  top: 90%;
+  left: 0;
+
+}
 
 

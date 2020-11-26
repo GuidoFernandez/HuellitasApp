@@ -43,6 +43,7 @@ var app = new Framework7({
 var mainView = app.views.create('.view-main');
 
 var email, NombreRefu;
+var latitud, longitud ;
 
 
 //principal deviceready
@@ -51,9 +52,34 @@ $$(document).on('deviceready', function() {
     
     $$('#iniciar').on('click', fniniciar);
 
+    var onSuccess = function(position) {
+      latitud= position.coords.latitude;
+      longitud= position.coords.longitude;
+
+     /**  alert('Latitude: '          + position.coords.latitude          + '\n' +
+            'Longitude: '         + position.coords.longitude         + '\n' +
+            'Altitude: '          + position.coords.altitude          + '\n' +
+            'Accuracy: '          + position.coords.accuracy          + '\n' +
+            'Altitude Accuracy: ' + position.coords.altitudeAccuracy  + '\n' +
+            'Heading: '           + position.coords.heading           + '\n' +
+            'Speed: '             + position.coords.speed             + '\n' +
+            'Timestamp: '         + position.timestamp                + '\n');
+            */
+  };
+
+  // onError Callback receives a PositionError object
+  //
+  function onError(error) {
+      alert('code: '    + error.code    + '\n' +
+            'message: ' + error.message + '\n');
+  }
+
+  navigator.geolocation.getCurrentPosition(onSuccess, onError);
    
-   
-    
+  var platform = new H.service.Platform({
+    'apikey': 'lrJdnUUTX28r2LywvXgPoalWJrPVu-za6vX_CHI2ls4'
+  });
+  
 });
 //index
 $$(document).on('page:init', '.page[data-name="index"]', function (e) {
@@ -83,21 +109,26 @@ $$(document).on('page:init', '.page[data-name="registroRefu"]', function (e) {
 $$(document).on('page:init', '.page[data-name="principal"]', function (e) {
   console.log("Pag Principal");
   $$('#logout').on('click', logout);
-  
+  $$('#PerdiMiMascota').on('click' , fnpmascosta);
+  $$('#AnimalNecesitaAyuda').on('click', fnayudamascota);
   traerDU();
   traerDatosRefugio();
 })
 
+//perfil
 $$(document).on('page:init', '.page[data-name="perfil"]', function (e) {
   console.log("Perfil");
+  
   $$('.popup-open').on('popup:open', function (e) {
     console.log('About popup open');
   });
 
   $$('#agregarfoto').on('click', fnfoto);
+
   traerDUP();
   traerDatosRefugioPerfil();
   
+  $$('#btnEnviar').on('click ' , fnenviarmensaje)
 })
      
 
@@ -324,7 +355,7 @@ function traerDatosRefugio(){
 }
 
 function fnfoto(){
-  navigator.camera.getPicture(onSuccess,onError,
+  navigator.camera.getPicture(onSuccessCamara, onErrorCamara,
     {
         quality: 50,
         destinationType: Camera.DestinationType.FILE_URI,
@@ -332,12 +363,78 @@ function fnfoto(){
     });
 }
 
-function onSuccess(imageURI){
+function onSuccessCamara(imageURI){
   $$('#fotoPerfilU').attr('src' , imageURI);
 }
 
-function onError (message){
+function onErrorCamara (message){
   console.log('Error : ' + message)
+}
+
+  var latitud=latit;
+  var longitud=longit
+  function geodecodificador(latit,longit){
+  url = 'https://reverse.geocoder.ls.hereapi.com/6.2/reversegeocode.json';
+  app.request.json(url, {
+    prox: latit+','+longit,
+    mode: 'retrieveAddresses',
+    maxresults: '1',
+    gen: '9',
+    apikey: 'lrJdnUUTX28r2LywvXgPoalWJrPVu-za6vX_CHI2ls4'
+    }, function (data) {
+     // hacer algo con data
+     console.log(data);
+   
+      console.log(data.Response.View[0].Result[0].Location.Address.Label);
+   
+   
+   
+  }, function(xhr, status) { console.log("error geo: "+status); }   );
+   
+   
+  }
+  
+
+  function fnpmascosta(){
+    
+    console.log("Perdi a mi mascota necesito ayuda! Lo perdi en este lugar: " + latit + " " + longit )
+  }
+  
+  function fnayudamascota(){
+   
+    console.log("Hay una mascota que necesita ayuda! Está en :"  + latitud + " " + longitud  )
+  }
+  
+  
+   
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+function fnenviarmensaje (){
+  var formatoFecha = new Date();
+  var d= formatoFecha.getUTCDate();
+  var m= formatoFecha.getMonth()+1;
+  var y= formatoFecha.getFullYear();
+  var h= formatoFecha.getHours();
+  var min= formatoFecha.getMinutes();
+
+  Fecha= d+"/"+m+"/"+y+" "+h+":"+min;
+  console.log(Fecha)
+  
 }
 
 
@@ -346,12 +443,6 @@ function onError (message){
 
 
 
-
-
-
-
-
-    
 
 
 
