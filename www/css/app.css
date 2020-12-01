@@ -226,5 +226,48 @@
   left: 0;
 
 }
+.messages-content{
+  background-image: url(/img/bg.jpg) ;
+  overflow-y: scroll;
+  padding-bottom: 10px;
+}
+.msg{
+ 
+  list-style-type: none;
+ 
+}
+/**
+span{
+  display: inline-block;
+  background-color: red;
+  padding: 10px;
+  border-radius: 20px;
+  font-size: 15px;
+  font-size: 13px;
+  text-align: left;
+  margin: 5px 5px 5px 10px;
+  box-shadow: .2px .3px 2px rgba((0), 0, 0, 0.3);
+
+}
+i{
+  font-weight: bold;
+}
+
+.my{
+  text-align: right;
+}
+
+.my span{
+  background-color: royalblue;
+  
+}
+
+.my i{
+  display: none;
+}
+
+.msg-btn{
+  border-radius: 20px;
+}
 
 

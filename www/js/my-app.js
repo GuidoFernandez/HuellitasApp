@@ -35,6 +35,14 @@ var app = new Framework7({
         path:'/perfil/',
         url: 'perfil.html'
       },
+      {
+        path:'/chat/',
+        url: 'chat.html'
+      },
+      {
+        path:'/principalRefu/',
+        url: 'principalRefu'
+      }
      
     ]
     // ... other parameters
@@ -79,7 +87,9 @@ $$(document).on('deviceready', function() {
   var platform = new H.service.Platform({
     'apikey': 'lrJdnUUTX28r2LywvXgPoalWJrPVu-za6vX_CHI2ls4'
   });
-  
+
+  var service = platform.getSearchService();
+
 });
 //index
 $$(document).on('page:init', '.page[data-name="index"]', function (e) {
@@ -109,9 +119,22 @@ $$(document).on('page:init', '.page[data-name="registroRefu"]', function (e) {
 $$(document).on('page:init', '.page[data-name="principal"]', function (e) {
   console.log("Pag Principal");
   $$('#logout').on('click', logout);
+ 
   $$('#PerdiMiMascota').on('click' , fnpmascosta);
+ 
   $$('#AnimalNecesitaAyuda').on('click', fnayudamascota);
   traerDU();
+  
+})
+//principal refu
+$$(document).on('page:init', '.page[data-name="principalRefu"]', function (e) {
+  console.log("Pag PrincipalRefu");
+  $$('#logout').on('click', logout);
+ 
+  $$('#PerdiMiMascota').on('click' , fnpmascosta);
+  $$('#NecesitoAuto').on('click ', fnauto);
+  $$('#AnimalNecesitaAyuda').on('click', fnayudamascota);
+  
   traerDatosRefugio();
 })
 
@@ -125,11 +148,16 @@ $$(document).on('page:init', '.page[data-name="perfil"]', function (e) {
 
   $$('#agregarfoto').on('click', fnfoto);
 
-  traerDUP();
+  
   traerDatosRefugioPerfil();
   
   $$('#btnEnviar').on('click ' , fnenviarmensaje)
 })
+
+//chat
+$$(document).on('page:init', '.page[data-name="chat"]', function (e) {
+
+});
      
 
 
@@ -155,7 +183,8 @@ $$(document).on('page:init', '.page[data-name="perfil"]', function (e) {
                 nombre: nombre,
                 apellido: apellido,
                 cel: cel,
-                fotoUsuario:'no'
+                fotoUsuario:'no',
+                alertM:'no',
             }
             console.log(nombre);
             console.log(apellido);
@@ -219,7 +248,9 @@ $$(document).on('page:init', '.page[data-name="perfil"]', function (e) {
         facebook : facebookrefu,
         fotoRefu:'no',
         direccion: 'no',
-        localidad:' no'
+        localidad:' no',
+        AlertManda:'no',
+        AlertReci:'no',
        
 
       }
@@ -264,7 +295,11 @@ function fniniciar(){
 
   firebase.auth().signInWithEmailAndPassword(email, password)
       .then(function(){
-        mainView.router.navigate('/principal/')
+        
+          mainView.router.navigate('/principal/')
+    
+      
+        
       }).catch(function(error) {
 
         // Handle Errors here.
@@ -349,7 +384,7 @@ function traerDatosRefugio(){
   .then(function(QuerySnapshot){
     QuerySnapshot.forEach(function(doc){
       nombreR=doc.data().nombreRefu;
-      $$('#nombreUsuario').append("<p>" + nombreR + "</p>")
+      $$('#nombreUsuarioRefu').append("<p>" + nombreR + "</p>")
     })
   })
 }
@@ -371,19 +406,17 @@ function onErrorCamara (message){
   console.log('Error : ' + message)
 }
 
-  var latitud=latit;
-  var longitud=longit
-  function geodecodificador(latit,longit){
+ 
+  function geodecodificador( latitud ,longitud ){
   url = 'https://reverse.geocoder.ls.hereapi.com/6.2/reversegeocode.json';
   app.request.json(url, {
-    prox: latit+','+longit,
+    prox: latitud+','+longitud,
     mode: 'retrieveAddresses',
     maxresults: '1',
     gen: '9',
-    apikey: 'lrJdnUUTX28r2LywvXgPoalWJrPVu-za6vX_CHI2ls4'
+    apikey: 'FH5DTDCBZY9lHxJb1bYCiWbt-xMR50xAP_WzWEYPDms'
     }, function (data) {
-     // hacer algo con data
-     console.log(data);
+    
    
       console.log(data.Response.View[0].Result[0].Location.Address.Label);
    
@@ -397,14 +430,18 @@ function onErrorCamara (message){
 
   function fnpmascosta(){
     
-    console.log("Perdi a mi mascota necesito ayuda! Lo perdi en este lugar: " + latit + " " + longit )
+      console.log("Perdi a mi mascota necesito ayuda! Lo perdi en este lugar: " , geodecodificador(latitud, longitud) )
   }
   
   function fnayudamascota(){
    
-    console.log("Hay una mascota que necesita ayuda! Está en :"  + latitud + " " + longitud  )
+      console.log("Hay una mascota que necesita ayuda! Está en :"  , geodecodificador(latitud, longitud)  )
   }
   
+  function fnautofnauto() {
+
+      console.log("Necesito a alguien con auto en esta zona : " , geodecodificador(latitud, longitud) )
+  }
   
    
 
@@ -423,9 +460,11 @@ function onErrorCamara (message){
 
 
 
-
-function fnenviarmensaje (){
-  var formatoFecha = new Date();
+function fnenviarmensaje(){
+  
+  mainView.router.navigate("/chat/");
+}
+  /*var formatoFecha = new Date();
   var d= formatoFecha.getUTCDate();
   var m= formatoFecha.getMonth()+1;
   var y= formatoFecha.getFullYear();
@@ -435,9 +474,29 @@ function fnenviarmensaje (){
   Fecha= d+"/"+m+"/"+y+" "+h+":"+min;
   console.log(Fecha)
   
+
+  const messageScreen = $$('#messages');
+  const messageForm = $$('#messageForm');
+  const msgInput = $$('#msg-input');
+  const msgBtn = $$('#msg-btn')
+  var db = firebase.firestore();
+  var msg = db.collection('/msgs');
+
+  messageForm.submit(Event =>{
+  Event.preventDefault();
+  /*var msg={
+    id:'991382801329',
+    name:'Guido',
+    text: "Hola!",
+
+  };
+
+  
+    msg.set("Guido")
+ })
 }
 
-
+*/
 
 
 
