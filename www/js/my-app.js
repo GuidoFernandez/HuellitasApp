@@ -42,7 +42,7 @@ var app = new Framework7({
       {
         path:'/principalRefu/',
         url: 'principalRefu.html'
-      }
+      },
      
     ]
     // ... other parameters
@@ -126,17 +126,24 @@ $$(document).on('page:init', '.page[data-name="principal"]', function (e) {
   traerDU();
   
 })
+
+
 //principal refu
 $$(document).on('page:init', '.page[data-name="principalRefu"]', function (e) {
+  
   console.log("Pag PrincipalRefu");
+  
   $$('#logout').on('click', logout);
  
-  $$('#PerdiMiMascota').on('click' , fnpmascosta(geodecodificador));
+  $$('#PerdiMiMascota').on('click' , fnpmascosta);
+  
   $$('#NecesitoAuto').on('click ', fnauto);
+ 
   $$('#AnimalNecesitaAyuda').on('click', fnayudamascota);
   
   traerDatosRefugio();
 })
+
 
 //perfil
 $$(document).on('page:init', '.page[data-name="perfil"]', function (e) {
@@ -232,7 +239,7 @@ $$(document).on('page:init', '.page[data-name="chat"]', function (e) {
             var db = firebase.firestore();
             var colRefugio = db.collection('Refugios');
 
-            claveDeColeccion = email; 
+            claveDeColeccionR = email; 
             nombretitu = $$('#NombreTitu').val();
             apellidotitu = $$('#ApelliTitu').val();
             email= $$('#emailregistroRefu').val();
@@ -303,26 +310,26 @@ function fniniciar(){
 
             //conectar a la coleccion usuarios y traer datos del usuario
             var db = firebase.firestore();
-            var colPersonas = db.collection('Personas');
+            var colRefugio = db.collection('Refugios');
             
           
            
             
             // "datos de la coleccion "tipo" 
-            claveDeColeccion = email;
+            claveDeColeccionR = email;
             
-            var docRef = colPersonas.doc(claveDeColeccion)
+            var docRef = colRefugio.doc(claveDeColeccionR)
             
           
              docRef.get().then(function(doc) {
             if (doc.exists) {
                 console.log("Document data:", doc.data());
                 Tipo = doc.data().Tipo;
-              if (Tipo == 'U'){
-                mainView.router.navigate("/principal/");
+              if (Tipo == 'R'){
+                mainView.router.navigate("/principalRefu/");
               }
               else{
-                mainView.router.navigate("/principalRefu/");
+                mainView.router.navigate("/principal/");
               }
             } else {
                 // doc.data() will be undefined in this case
