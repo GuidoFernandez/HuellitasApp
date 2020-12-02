@@ -41,7 +41,7 @@ var app = new Framework7({
       },
       {
         path:'/principalRefu/',
-        url: 'principalRefu'
+        url: 'principalRefu.html'
       }
      
     ]
@@ -131,7 +131,7 @@ $$(document).on('page:init', '.page[data-name="principalRefu"]', function (e) {
   console.log("Pag PrincipalRefu");
   $$('#logout').on('click', logout);
  
-  $$('#PerdiMiMascota').on('click' , fnpmascosta);
+  $$('#PerdiMiMascota').on('click' , fnpmascosta(geodecodificador));
   $$('#NecesitoAuto').on('click ', fnauto);
   $$('#AnimalNecesitaAyuda').on('click', fnayudamascota);
   
@@ -185,13 +185,15 @@ $$(document).on('page:init', '.page[data-name="chat"]', function (e) {
                 cel: cel,
                 fotoUsuario:'no',
                 alertM:'no',
+                Tipo:'U'
             }
             console.log(nombre);
             console.log(apellido);
             console.log(cel);
             colPersonas.doc(claveDeColeccion).set(datos)
             .then( function() {
-                mainView.router.navigate("/index/");
+                
+              mainView.router.navigate("/index/");
         
         
             })
@@ -219,71 +221,73 @@ $$(document).on('page:init', '.page[data-name="chat"]', function (e) {
 
 
  function fnregistrarRefu(){
-    NombreRefu=$$('#NombreRefu').val();
+    
     email=$$('#emailregistroRefu').val();
     password=$$('#passregistroRefu').val();
 
     firebase.auth().createUserWithEmailAndPassword(email, password)
     .then(function(){
 
-     
-      var db = firebase.firestore();
-      var colRefugio = db.collection('Refugios');
+          
+            var db = firebase.firestore();
+            var colRefugio = db.collection('Refugios');
 
-      claveDeColeccion = NombreRefu; 
-      nombretitu = $$('#NombreTitu').val();
-      apellidotitu = $$('#ApelliTitu').val();
-      email= $$('#emailregistroRefu').val();
-      celrefu = $$('#CelRefu').val();
-      instagramrefu= $$('#InstagramRefu').val();
-      facebookrefu=$$('#Facebookrefu').val();
+            claveDeColeccion = email; 
+            nombretitu = $$('#NombreTitu').val();
+            apellidotitu = $$('#ApelliTitu').val();
+            email= $$('#emailregistroRefu').val();
+            celrefu = $$('#CelRefu').val();
+            instagramrefu= $$('#InstagramRefu').val();
+            facebookrefu=$$('#Facebookrefu').val();
+            NombreRefu=$$('#NombreRefu').val();
 
-      datosRefugio = {
-        nombreRefu : NombreRefu,
-        nombretitu : nombretitu,
-        apellidotitu : apellidotitu, 
-        email : email,
-        cel : celrefu,
-        instagram : instagramrefu,
-        facebook : facebookrefu,
-        fotoRefu:'no',
-        direccion: 'no',
-        localidad:' no',
-        AlertManda:'no',
-        AlertReci:'no',
-       
+            datosRefugio = {
+              nombreRefu : NombreRefu,
+              nombretitu : nombretitu,
+              apellidotitu : apellidotitu, 
+              email : email,
+              cel : celrefu,
+              instagram : instagramrefu,
+              facebook : facebookrefu,
+              fotoRefu:'no',
+              direccion: 'no',
+              localidad:' no',
+              AlertManda:'no',
+              AlertReci:'no',
+              Tipo:'R',
+            
 
-      }
-        console.log(NombreRefu);
-        console.log(nombretitu);
-        console.log(apellidotitu);
-        console.log(email);
-        console.log(celrefu);
-        console.log(instagramrefu);
-        console.log(facebookrefu);
+            }
+              console.log(NombreRefu);
+              console.log(nombretitu);
+              console.log(apellidotitu);
+              console.log(email);
+              console.log(celrefu);
+              console.log(instagramrefu);
+              console.log(facebookrefu);
 
-      colRefugio.doc(claveDeColeccion).set(datosRefugio)
-      .then( function() {
-        mainView.router.navigate("/index/");
+            colRefugio.doc(claveDeColeccionR).set(datosRefugio)
+            .then( function() {
+              mainView.router.navigate("/index/");
 
 
-    })
+          })
 
-    .catch( function(e) {
+          .catch( function(e) {
+
+              
+          })
 
         
-    })
-
-   
-  })
-      .catch(function(error) {
-      // Handle Errors here.
-      var errorCode = error.code;
-      var errorMessage = error.message;
-      alert(errorCode)
-      })
-           
-      }
+        })
+            .catch(function(error) {
+            // Handle Errors here.
+            var errorCode = error.code;
+            var errorMessage = error.message;
+            alert(errorCode)
+            })
+                
+            }
 
 
 
@@ -295,21 +299,58 @@ function fniniciar(){
 
   firebase.auth().signInWithEmailAndPassword(email, password)
       .then(function(){
-        
-          mainView.router.navigate('/principal/')
-    
-      
-        
-      }).catch(function(error) {
 
-        // Handle Errors here.
-        var errorCode = error.code;
-        var errorMessage = error.message;
-        alert(errorCode);
-        // ...
-      });
 
+            //conectar a la coleccion usuarios y traer datos del usuario
+            var db = firebase.firestore();
+            var colPersonas = db.collection('Personas');
+            
+          
+           
+            
+            // "datos de la coleccion "tipo" 
+            claveDeColeccion = email;
+            
+            var docRef = colPersonas.doc(claveDeColeccion)
+            
+          
+             docRef.get().then(function(doc) {
+            if (doc.exists) {
+                console.log("Document data:", doc.data());
+                Tipo = doc.data().Tipo;
+              if (Tipo == 'U'){
+                mainView.router.navigate("/principal/");
+              }
+              else{
+                mainView.router.navigate("/principalRefu/");
+              }
+            } else {
+                // doc.data() will be undefined in this case
+                console.log("No such document!");
+            }
+        }).catch(function(error) {
+            console.log("Error getting document:", error);
+        });
+            
+
+        
+       
+
+
+           
+        } )
+            
+        .catch(function(error) {
+
+          // Handle Errors here.
+          var errorCode = error.code;
+          var errorMessage = error.message;
+          alert(errorCode);
+          // ...
+        });
 }
+
+
 
 function logout(){
   firebase.auth().signOut().then(function() {
@@ -337,21 +378,7 @@ function traerDU(){
         })
     })
 }
-function traerDUP(){
-  $$('.nombreUR').html(" ")
-  var db = firebase.firestore();
-  var colPersonas = db.collection('Personas');
-    colPersonas.get()
-    .then(function(QuerySnapshot){
-        QuerySnapshot.forEach(function(doc){
-            nombre=doc.data().nombre;
-            apellido=doc.data().apellido;
-            //fotoRefu=doc.data().apellido;
-            $$('.nombreUR').append( "<p>" + nombre + " " + apellido + "</p>")
-            
-        })
-    })
-}
+
 
 function traerDatosRefugioPerfil(){ 
   $$('.nombreUR').html(" ")
@@ -407,37 +434,49 @@ function onErrorCamara (message){
 }
 
  
-  function geodecodificador( latitud ,longitud ){
-  url = 'https://reverse.geocoder.ls.hereapi.com/6.2/reversegeocode.json';
-  app.request.json(url, {
-    prox: latitud+','+longitud,
-    mode: 'retrieveAddresses',
-    maxresults: '1',
-    gen: '9',
-    apikey: 'FH5DTDCBZY9lHxJb1bYCiWbt-xMR50xAP_WzWEYPDms'
-    }, function (data) {
-    
+  
+  
+  function fnpmascosta(){
+        
+    function geodecodificador( latitud ,longitud ){
+
+        url = 'https://reverse.geocoder.ls.hereapi.com/6.2/reversegeocode.json';
+        app.request.json(url, {
+          prox: latitud+','+longitud,
+          mode: 'retrieveAddresses',
+          maxresults: '1',
+          gen: '9',
+          apikey: 'FH5DTDCBZY9lHxJb1bYCiWbt-xMR50xAP_WzWEYPDms'
+          }, function (data) {
+          
+        
+            console.log(data.Response.View[0].Result[0].Location.Address.Label);
+        
+        
+        
+        }, function(xhr, status) { console.log("error geo: "+status); }   );
+      
+      }
+        
+      const locadiad = (geodecodificador(latitud, longitud));
+          
+        console.log("Perdí mi mascota por esta direccion :  " +locadiad )
+      }
+  
    
-      console.log(data.Response.View[0].Result[0].Location.Address.Label);
-   
-   
-   
-  }, function(xhr, status) { console.log("error geo: "+status); }   );
-   
-   
+  
+  function fnayudamascota(){
+      console.log( latitud+ " " + longitud)
+
+      cordova.plugins.notification.local.schedule({
+        title: 'Hay una mascota que necesita de tu ayuda!!',
+        text:  'Esta por esta  direccion: ' + geodecodificador(latitud, longitud),
+        foreground: true
+    });
+     
   }
   
 
-  function fnpmascosta(){
-    
-      console.log("Perdi a mi mascota necesito ayuda! Lo perdi en este lugar: " , geodecodificador(latitud, longitud) )
-  }
-  
-  function fnayudamascota(){
-   
-      console.log("Hay una mascota que necesita ayuda! Está en :"  , geodecodificador(latitud, longitud)  )
-  }
-  
   function fnautofnauto() {
 
       console.log("Necesito a alguien con auto en esta zona : " , geodecodificador(latitud, longitud) )
