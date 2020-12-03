@@ -226,6 +226,7 @@
   left: 0;
 
 }
+
 .messages-content{
   background-image: url(/img/bg.jpg) ;
   overflow-y: scroll;
@@ -236,8 +237,8 @@
   list-style-type: none;
  
 }
-/**
-span{
+
+.sapn{
   display: inline-block;
   background-color: red;
   padding: 10px;
@@ -246,28 +247,34 @@ span{
   font-size: 13px;
   text-align: left;
   margin: 5px 5px 5px 10px;
-  box-shadow: .2px .3px 2px rgba((0), 0, 0, 0.3);
+  box-shadow: .2px .3px 2px rgba((0), 0, 0, 0.7);
 
 }
-i{
+
+.i{
   font-weight: bold;
-}
-
-.my{
-  text-align: right;
-}
-
-.my span{
-  background-color: royalblue;
-  
-}
-
-.my i{
-  display: none;
+  color: black;
 }
 
 .msg-btn{
   border-radius: 20px;
 }
+.my{
+  text-align: right;
+}
+.my span{
+ background-color: chartreuse;
+ color: #ffffff;
+}
+.my i{
+  display: none;
+}
 
+.estilo{
+    border-radius: 30px;
+    background: ghostwhite;
+    margin-top: 100px
+}
+
+    
 

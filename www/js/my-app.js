@@ -51,7 +51,7 @@ var app = new Framework7({
 var mainView = app.views.create('.view-main');
 
 var email, NombreRefu;
-var latitud, longitud ;
+var latitud, longitud,  lugar;
 
 
 //principal deviceready
@@ -120,7 +120,7 @@ $$(document).on('page:init', '.page[data-name="principal"]', function (e) {
   console.log("Pag Principal");
   $$('#logout').on('click', logout);
  
-  $$('#PerdiMiMascota').on('click' , fnpmascosta);
+  $$('#PerdiMiMascota').on('click' , geodecodificador);
  
   $$('#AnimalNecesitaAyuda').on('click', fnayudamascota);
   traerDU();
@@ -137,7 +137,7 @@ $$(document).on('page:init', '.page[data-name="principalRefu"]', function (e) {
  
   $$('#PerdiMiMascota').on('click' , fnpmascosta);
   
-  $$('#NecesitoAuto').on('click ', fnauto);
+ // $$('#NecesitoAuto').on('click ', fnauto);
  
   $$('#AnimalNecesitaAyuda').on('click', fnayudamascota);
   
@@ -145,7 +145,7 @@ $$(document).on('page:init', '.page[data-name="principalRefu"]', function (e) {
 })
 
 
-//perfil
+//perfilrefu
 $$(document).on('page:init', '.page[data-name="perfil"]', function (e) {
   console.log("Perfil");
   
@@ -164,6 +164,7 @@ $$(document).on('page:init', '.page[data-name="perfil"]', function (e) {
 //chat
 $$(document).on('page:init', '.page[data-name="chat"]', function (e) {
 
+ $$('#msg-btn').on('click', fnchat);
 });
      
 
@@ -336,6 +337,7 @@ function fniniciar(){
                 console.log("No such document!");
             }
         }).catch(function(error) {
+            mainView.router.navigate("/principal/");
             console.log("Error getting document:", error);
         });
             
@@ -396,7 +398,7 @@ function traerDatosRefugioPerfil(){
       querySnapshot.forEach(function(doc){
         nombreR=doc.data().nombreRefu;
         //ft=doc.data().fotoRefu;
-        email=doc.data().email;
+        //email=doc.data().email;
         $$('.nombreUR').append("<p>" + nombreR + "</p>")
         //$$('.emailP').append("<p>" + email + "</p>")
         //$$('#fotoPerfil').attr('src', 'ft')
@@ -411,14 +413,14 @@ function traerDatosRefugioPerfil(){
 };
 
 function traerDatosRefugio(){
-  $$('#nombreUsuario').html("  ")
+  $$('#nombreUsuarioR').html("  ")
   var db = firebase.firestore();
   var colRefugio = db.collection('Refugios');
   colRefugio.get()
   .then(function(QuerySnapshot){
     QuerySnapshot.forEach(function(doc){
       nombreR=doc.data().nombreRefu;
-      $$('#nombreUsuarioRefu').append("<p>" + nombreR + "</p>")
+      $$('#nombreUsuarioR').html("<p>" + nombreR + "</p>")
     })
   })
 }
@@ -440,36 +442,71 @@ function onErrorCamara (message){
   console.log('Error : ' + message)
 }
 
+/*url = 'https://reverse.geocoder.ls.hereapi.com/6.2/reversegeocode.json';
+app.request.json(url, {
+  prox: latitud+','+longitud,
+  mode: 'retrieveAddresses',
+  maxresults: '1',
+  gen: '9',
+  apiKey: 'FH5DTDCBZY9lHxJb1bYCiWbt-xMR50xAP_WzWEYPDms'
+  
+  }, function (data) {
+   // hacer algo con data
+   
+   
+    console.log(data.Response.View[0].Result[0].Location.Address.Label);
+    
+    
+    
+  
+}, function(xhr, status) { console.log("error geo: "+status); }   );
  
-  
-  
-  function fnpmascosta(){
-        
-    function geodecodificador( latitud ,longitud ){
+   console.log("Perdi a mi mascota por esta zona : " ,  (data.Response.View[0].Result[0].Location.Address.Label) )
+}
+/****************************GEO DECODIFICADOR ************************/
 
-        url = 'https://reverse.geocoder.ls.hereapi.com/6.2/reversegeocode.json';
-        app.request.json(url, {
-          prox: latitud+','+longitud,
-          mode: 'retrieveAddresses',
-          maxresults: '1',
-          gen: '9',
-          apikey: 'FH5DTDCBZY9lHxJb1bYCiWbt-xMR50xAP_WzWEYPDms'
-          }, function (data) {
-          
-        
-            console.log(data.Response.View[0].Result[0].Location.Address.Label);
-        
-        
-        
-        }, function(xhr, status) { console.log("error geo: "+status); }   );
-      
-      }
-        
-      const locadiad = (geodecodificador(latitud, longitud));
-          
-        console.log("Perdí mi mascota por esta direccion :  " +locadiad )
-      }
+
+
+/**********************GEO DECODIFICADOR *******************************/
+function fnpmascosta (latitud,longitud){
+  // Instantiate a map and platform object:
+var platform = new H.service.Platform({
+  'apikey': 'lrJdnUUTX28r2LywvXgPoalWJrPVu-za6vX_CHI2ls4'
+});
+
+// Get an instance of the search service:
+var service = platform.getSearchService();
+
+// Call the reverse geocode method with the geocoding parameters,
+// the callback and an error callback function (called if a
+// communication error occurs):
+service.reverseGeocode({
+  at: latitud , longitud
+}, (result) => {
+  result.items.forEach((item) => {
+    // Assumption: ui is instantiated
+    // Create an InfoBubble at the returned location with
+    // the address as its contents:
+    ui.addBubble(new H.ui.InfoBubble(item.position, {
+      content: item.address.label
+    }));
+  });
+}, alert);
   
+  
+ 
+
+
+
+
+  
+
+  
+
+
+
+  
+}
    
   
   function fnayudamascota(){
@@ -484,22 +521,12 @@ function onErrorCamara (message){
   }
   
 
-  function fnautofnauto() {
+  /*function fnautofnauto() {
 
       console.log("Necesito a alguien con auto en esta zona : " , geodecodificador(latitud, longitud) )
   }
-  
+  */
    
-
-
-
-
-
-
-
-
-
-
 
 
 
@@ -509,8 +536,109 @@ function onErrorCamara (message){
 function fnenviarmensaje(){
   
   mainView.router.navigate("/chat/");
+  
+ 
 }
-  /*var formatoFecha = new Date();
+
+
+
+
+
+function fnchat(){
+ 
+  const mensaje=$$('#msg-input').val();
+  console.log(mensaje)
+    if(!mensaje.trim()){
+      console.log('Input vacio')
+      return
+    }
+
+    nombre = $$('#NombreReg').val();
+    claveDeColeccion=email;
+    firebase.firestore().collection('chat').add({
+        texto:mensaje,
+        id: claveDeColeccion,
+        fecha: Date.now(),
+            })
+            .then(function(e){
+              console.log('mensaje guardado')
+            })
+            .catch(function(e){
+              console.log(e)
+            });
+            $$('#msg-input').val(" ");
+
+
+            firebase.firestore().collection('chat').orderBy('fecha')
+            .onSnapshot(function(Query){
+              $$( '.messages-content').html( " " )
+            Query.forEach(function(doc){
+                console.log(doc.data())
+
+                fecha=doc.data().fecha;
+                id=doc.data().id;
+                texto=doc.data().texto;
+                if(doc.data().id === claveDeColeccion){
+                  $$('.messages-content')
+                  .append( 
+                    `
+                  <ul id="messages">
+                  <li class="msg my">
+                      <span  class="sapn">
+                          <i class="name i">:`+ id + ` </i> 
+                      </span>
+                  </li>
+              </ul>`)
+                }else{
+                  $$( '.messages-content')
+                  .html( `
+                  <ul id="messages">
+                  <li class="msg">
+                      <span class="sapn">
+                          <i class="name i "> : </i>`+texto+`
+                      </span>
+                  </li>
+              </ul>`)
+              }
+                }
+            )}
+            )}
+
+
+
+  /*var txtnombre=$$('#nombre');
+var txtmensaje=$$('#msg-input');
+var btnEnviar=$$('#msg-btn')
+var chatUL=$$('#messages')
+
+$$('#btnEnviar').on('click' , function(){
+  var nombre = txtnombre.val();
+  var mensaje =  txtmensaje.val();
+  var hmtll = '<li class="msg"><span ><i class="name ">'+ nombre +' : </i> '+mensaje+' </span></li>'
+
+  chatUL.innerHTML += hmtll;
+  
+})
+*/
+
+
+
+
+
+
+
+
+
+   
+    
+
+
+
+
+
+
+
+/*var formatoFecha = new Date();
   var d= formatoFecha.getUTCDate();
   var m= formatoFecha.getMonth()+1;
   var y= formatoFecha.getFullYear();
@@ -528,29 +656,6 @@ function fnenviarmensaje(){
   var db = firebase.firestore();
   var msg = db.collection('/msgs');
 
-  messageForm.submit(Event =>{
-  Event.preventDefault();
-  /*var msg={
-    id:'991382801329',
-    name:'Guido',
-    text: "Hola!",
 
-  };
-
-  
-    msg.set("Guido")
- })
-}
-
+  }
 */
-
-
-
-
-
-
-
-
-
-   
-    
