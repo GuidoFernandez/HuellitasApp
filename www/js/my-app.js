@@ -153,7 +153,7 @@ $$(document).on('page:init', '.page[data-name="perfil"]', function (e) {
     console.log('About popup open');
   });
 
-  $$('#agregarfoto').on('click', fnfoto);
+  $$('#agregarfoto').on('click', fngaleria);
 
   
   traerDatosRefugioPerfil();
@@ -240,7 +240,7 @@ $$(document).on('page:init', '.page[data-name="chat"]', function (e) {
             var db = firebase.firestore();
             var colRefugio = db.collection('Refugios');
 
-            claveDeColeccionR = email; 
+            claveDeColeccion = email; 
             nombretitu = $$('#NombreTitu').val();
             apellidotitu = $$('#ApelliTitu').val();
             email= $$('#emailregistroRefu').val();
@@ -274,7 +274,7 @@ $$(document).on('page:init', '.page[data-name="chat"]', function (e) {
               console.log(instagramrefu);
               console.log(facebookrefu);
 
-            colRefugio.doc(claveDeColeccionR).set(datosRefugio)
+            colRefugio.doc(claveDeColeccion).set(datosRefugio)
             .then( function() {
               mainView.router.navigate("/index/");
 
@@ -317,9 +317,9 @@ function fniniciar(){
            
             
             // "datos de la coleccion "tipo" 
-            claveDeColeccionR = email;
+            claveDeColeccion = email;
             
-            var docRef = colRefugio.doc(claveDeColeccionR)
+            var docRef = colRefugio.doc(claveDeColeccion)
             
           
              docRef.get().then(function(doc) {
@@ -333,19 +333,14 @@ function fniniciar(){
                 mainView.router.navigate("/principal/");
               }
             } else {
-                // doc.data() will be undefined in this case
-                console.log("No such document!");
+                mainView.router.navigate("/principal/");
+                
             }
         }).catch(function(error) {
             mainView.router.navigate("/principal/");
             console.log("Error getting document:", error);
         });
             
-
-        
-       
-
-
            
         } )
             
@@ -425,22 +420,25 @@ function traerDatosRefugio(){
   })
 }
 
-function fnfoto(){
-  navigator.camera.getPicture(onSuccessCamara, onErrorCamara,
+function fngaleria(){
+  navigator.camera.getPicture(onSuccessGaleria,onErrorGaleria,
     {
         quality: 50,
         destinationType: Camera.DestinationType.FILE_URI,
         sourceType: Camera.PictureSourceType.PHOTOLIBRARY
     });
+
+}
+function onSuccessGaleria(ImageURI){
+  $$('#fotoPerfilU').attr('src',ImageURI )
+
 }
 
-function onSuccessCamara(imageURI){
-  $$('#fotoPerfilU').attr('src' , imageURI);
+function onErrorGaleria(message){
+  console.log(message)
+
 }
 
-function onErrorCamara (message){
-  console.log('Error : ' + message)
-}
 
 /*url = 'https://reverse.geocoder.ls.hereapi.com/6.2/reversegeocode.json';
 app.request.json(url, {
@@ -585,41 +583,38 @@ function fnchat(){
                   <ul id="messages">
                   <li class="msg my">
                       <span  class="sapn">
-                          <i class="name i">:`+ id + ` </i> 
+                          <i class="name ">:`+ texto + ` </i> 
                       </span>
                   </li>
               </ul>`)
-                }else{
+                }else if (doc.data().id !== claveDeColeccion){
                   $$( '.messages-content')
-                  .html( `
+                  .append( `
                   <ul id="messages">
                   <li class="msg">
                       <span class="sapn">
-                          <i class="name i "> : </i>`+texto+`
+                          <i class="name  ">  </i>`+texto+`
                       </span>
                   </li>
               </ul>`)
+              }
+              else{
+                $$('.messages-content')
+                .append( 
+                  `
+                <ul id="messages">
+                <li class="msg my">
+                    <span  class="sapn">
+                        <i class="name ">:`+ texto + ` </i> 
+                    </span>
+                </li>
+            </ul>`)
               }
                 }
             )}
             )}
 
 
-
-  /*var txtnombre=$$('#nombre');
-var txtmensaje=$$('#msg-input');
-var btnEnviar=$$('#msg-btn')
-var chatUL=$$('#messages')
-
-$$('#btnEnviar').on('click' , function(){
-  var nombre = txtnombre.val();
-  var mensaje =  txtmensaje.val();
-  var hmtll = '<li class="msg"><span ><i class="name ">'+ nombre +' : </i> '+mensaje+' </span></li>'
-
-  chatUL.innerHTML += hmtll;
-  
-})
-*/
 
 
 
@@ -637,25 +632,3 @@ $$('#btnEnviar').on('click' , function(){
 
 
 
-
-/*var formatoFecha = new Date();
-  var d= formatoFecha.getUTCDate();
-  var m= formatoFecha.getMonth()+1;
-  var y= formatoFecha.getFullYear();
-  var h= formatoFecha.getHours();
-  var min= formatoFecha.getMinutes();
-
-  Fecha= d+"/"+m+"/"+y+" "+h+":"+min;
-  console.log(Fecha)
-  
-
-  const messageScreen = $$('#messages');
-  const messageForm = $$('#messageForm');
-  const msgInput = $$('#msg-input');
-  const msgBtn = $$('#msg-btn')
-  var db = firebase.firestore();
-  var msg = db.collection('/msgs');
-
-
-  }
-*/
