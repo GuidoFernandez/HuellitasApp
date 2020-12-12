@@ -131,10 +131,17 @@
 	border: 3px solid #ffffff ;
 	border-radius: 4px;
 	padding: 15px;
-	position: absolute;
-	top: 50%;
-	left: 50%;
-	transform: translate(-50%, -50%);
+	position: block;
+	margin: 5%;
+ 
+  
+}
+.my-form{
+  overflow-y: scroll;
+}
+
+.myformm{
+  height: 50%;
 }
 
 .title{
@@ -256,7 +263,7 @@
   color: black;
 }
 
-.msg-btn{
+#msg-btn{
   border-radius: 20px;
 }
 .my{
@@ -272,6 +279,45 @@
     border-radius: 30px;
     background: ghostwhite;
     margin-top: 100px
+}
+.contendorM {
+  background-color: aliceblue;
+  width: 90%;
+  border: 3px solid #ffffff;
+  border-radius: 4px;
+  padding: 15px;
+  margin-top: 20%;
+}
+.page-content-mascotasP{
+  overflow-y: scroll
+}
+.mascotasP{
+  overflow-y: scroll;
+}
+#Titulo{
+  text-align: center;
+}
+#foto{
+  height: 90%;
+  width: 100%;
+}
+#lugar{
+  text-align: center;
+}
+#Calle{
+  text-align: center;
+}
+#NombreMM{
+  text-align: center;
+}
+#raza{
+  text-align: center;
+}
+#Num{
+  text-align: center;
+}
+#mail{
+  text-align: center;
 }
 
     

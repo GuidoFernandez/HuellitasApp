@@ -43,6 +43,10 @@ var app = new Framework7({
         path:'/principalRefu/',
         url: 'principalRefu.html'
       },
+      {
+        path:'/Mperdidas/',
+        url: ' Mperdidas.html'
+      }
      
     ]
     // ... other parameters
@@ -51,7 +55,7 @@ var app = new Framework7({
 var mainView = app.views.create('.view-main');
 
 var email, NombreRefu;
-var latitud, longitud,  lugar;
+var latitud, longitud,  lugar, imagenesFBref;
 
 
 //principal deviceready
@@ -120,10 +124,13 @@ $$(document).on('page:init', '.page[data-name="principal"]', function (e) {
   console.log("Pag Principal");
   $$('#logout').on('click', logout);
  
-  $$('#PerdiMiMascota').on('click' , geodecodificador);
- 
-  $$('#AnimalNecesitaAyuda').on('click', fnayudamascota);
   traerDU();
+
+  
+  $$('#AlertaP').on('click' , fnAlertaP, CrearAlert);
+
+  $$('#AlertaN').on('click' , AlertaN);
+  
   
 })
 
@@ -135,14 +142,24 @@ $$(document).on('page:init', '.page[data-name="principalRefu"]', function (e) {
   
   $$('#logout').on('click', logout);
  
-  $$('#PerdiMiMascota').on('click' , fnpmascosta);
   
- // $$('#NecesitoAuto').on('click ', fnauto);
- 
-  $$('#AnimalNecesitaAyuda').on('click', fnayudamascota);
-  
+
   traerDatosRefugio();
-})
+
+  // DOM events for About popover
+  $$('.popup-alertaP').on('popup:open', function (e) {
+    console.log('About popup open');
+  });
+  
+
+  $$('#AlertaP').on('click' , fnAlertaP, CrearAlert);
+
+  $$('#AlertaN').on('click' , AlertaN);
+
+  $$('#AlertaAu').on('click' , AlertaAu)
+  
+
+});
 
 
 //perfilrefu
@@ -153,12 +170,14 @@ $$(document).on('page:init', '.page[data-name="perfil"]', function (e) {
     console.log('About popup open');
   });
 
-  $$('#agregarfoto').on('click', fngaleria);
+
 
   
   traerDatosRefugioPerfil();
   
   $$('#btnEnviar').on('click ' , fnenviarmensaje)
+
+  $$('#actuliza').on('click', uploadprofile )
 })
 
 //chat
@@ -166,7 +185,17 @@ $$(document).on('page:init', '.page[data-name="chat"]', function (e) {
 
  $$('#msg-btn').on('click', fnchat);
 });
-     
+
+
+//Mascotas Perdidas 
+
+$$(document).on('page:init', '.page[data-name="Mperdidas"]', function (e) {
+  console.log('Mascotas perdidas')
+  
+  fnMuestraMP();
+
+ });
+      
 
 
 
@@ -241,6 +270,7 @@ $$(document).on('page:init', '.page[data-name="chat"]', function (e) {
             var colRefugio = db.collection('Refugios');
 
             claveDeColeccion = email; 
+            
             nombretitu = $$('#NombreTitu').val();
             apellidotitu = $$('#ApelliTitu').val();
             email= $$('#emailregistroRefu').val();
@@ -248,7 +278,9 @@ $$(document).on('page:init', '.page[data-name="chat"]', function (e) {
             instagramrefu= $$('#InstagramRefu').val();
             facebookrefu=$$('#Facebookrefu').val();
             NombreRefu=$$('#NombreRefu').val();
-
+            Localidad=$$('#Localidad').val();
+            direccion= $$('#Direccion').val();
+            
             datosRefugio = {
               nombreRefu : NombreRefu,
               nombretitu : nombretitu,
@@ -258,10 +290,8 @@ $$(document).on('page:init', '.page[data-name="chat"]', function (e) {
               instagram : instagramrefu,
               facebook : facebookrefu,
               fotoRefu:'no',
-              direccion: 'no',
-              localidad:' no',
-              AlertManda:'no',
-              AlertReci:'no',
+              direccion: direccion,
+              localidad: Localidad,
               Tipo:'R',
             
 
@@ -296,6 +326,7 @@ $$(document).on('page:init', '.page[data-name="chat"]', function (e) {
             })
                 
             }
+
 
 
 
@@ -420,126 +451,12 @@ function traerDatosRefugio(){
   })
 }
 
-function fngaleria(){
-  navigator.camera.getPicture(onSuccessGaleria,onErrorGaleria,
-    {
-        quality: 50,
-        destinationType: Camera.DestinationType.FILE_URI,
-        sourceType: Camera.PictureSourceType.PHOTOLIBRARY
-    });
-
-}
-function onSuccessGaleria(ImageURI){
-  $$('#fotoPerfilU').attr('src',ImageURI )
-
-}
-
-function onErrorGaleria(message){
-  console.log(message)
-
-}
-
-
-/*url = 'https://reverse.geocoder.ls.hereapi.com/6.2/reversegeocode.json';
-app.request.json(url, {
-  prox: latitud+','+longitud,
-  mode: 'retrieveAddresses',
-  maxresults: '1',
-  gen: '9',
-  apiKey: 'FH5DTDCBZY9lHxJb1bYCiWbt-xMR50xAP_WzWEYPDms'
-  
-  }, function (data) {
-   // hacer algo con data
-   
-   
-    console.log(data.Response.View[0].Result[0].Location.Address.Label);
-    
-    
-    
-  
-}, function(xhr, status) { console.log("error geo: "+status); }   );
- 
-   console.log("Perdi a mi mascota por esta zona : " ,  (data.Response.View[0].Result[0].Location.Address.Label) )
-}
-/****************************GEO DECODIFICADOR ************************/
-
-
-
-/**********************GEO DECODIFICADOR *******************************/
-function fnpmascosta (latitud,longitud){
-  // Instantiate a map and platform object:
-var platform = new H.service.Platform({
-  'apikey': 'lrJdnUUTX28r2LywvXgPoalWJrPVu-za6vX_CHI2ls4'
-});
-
-// Get an instance of the search service:
-var service = platform.getSearchService();
-
-// Call the reverse geocode method with the geocoding parameters,
-// the callback and an error callback function (called if a
-// communication error occurs):
-service.reverseGeocode({
-  at: latitud , longitud
-}, (result) => {
-  result.items.forEach((item) => {
-    // Assumption: ui is instantiated
-    // Create an InfoBubble at the returned location with
-    // the address as its contents:
-    ui.addBubble(new H.ui.InfoBubble(item.position, {
-      content: item.address.label
-    }));
-  });
-}, alert);
-  
-  
- 
-
-
-
-
-  
-
-  
-
-
-
-  
-}
-   
-  
-  function fnayudamascota(){
-      console.log( latitud+ " " + longitud)
-
-      cordova.plugins.notification.local.schedule({
-        title: 'Hay una mascota que necesita de tu ayuda!!',
-        text:  'Esta por esta  direccion: ' + geodecodificador(latitud, longitud),
-        foreground: true
-    });
-     
-  }
-  
-
-  /*function fnautofnauto() {
-
-      console.log("Necesito a alguien con auto en esta zona : " , geodecodificador(latitud, longitud) )
-  }
-  */
-   
-
-
-
 
 
 
 function fnenviarmensaje(){
-  
-  mainView.router.navigate("/chat/");
-  
- 
+  mainView.router.navigate("/chat/")
 }
-
-
-
 
 
 function fnchat(){
@@ -583,7 +500,7 @@ function fnchat(){
                   <ul id="messages">
                   <li class="msg my">
                       <span  class="sapn">
-                          <i class="name ">:`+ texto + ` </i> 
+                          <i class="name ">`+ texto + ` </i> 
                       </span>
                   </li>
               </ul>`)
@@ -605,7 +522,7 @@ function fnchat(){
                 <ul id="messages">
                 <li class="msg my">
                     <span  class="sapn">
-                        <i class="name ">:`+ texto + ` </i> 
+                        <i class="name ">`+ texto + ` </i> 
                     </span>
                 </li>
             </ul>`)
@@ -616,15 +533,303 @@ function fnchat(){
 
 
 
+            function fnAlertaP (){
+              
+             
+              var db = firebase.firestore();
+              var colAlertas = db.collection('LostPetAlerts');
+             
+            
+              var NombreM=$$('#NombreM').val();
+              var Mascosta=$$('#Mascosta').val();
+              var Raza=$$('#Raza').val();
+              var Color=$$('#ColorP').val();
+              var Collar=$$('#Collar').val();
+              var Foto=$$('#archivo').val();
+              var Localidad =$$('#Localidad').val();
+              var Direccion= $$('#Direccion').val();
+              claveDeColeccion=email
+                datosDeAlerta={
+                  Dueño: claveDeColeccion,
+                  NombreM: NombreM,
+                  Mascosta: Mascosta,
+                  Raza:Raza,
+                  Color:Color,
+                  Collar:Collar,
+                  Foto:Foto,
+                  Localidad: Localidad,
+                  Direccion: Direccion, 
+                  Fecha: Date.now(),
+                
+                }
+               
+                console.log(claveDeColeccion)
+                console.log(NombreM)
+                console.log(Mascosta)
+                console.log(Raza)
+                console.log(Color)
+                console.log(Collar)
+                console.log(Foto)
+                console.log(Localidad)
+                console.log(Direccion)
+              
+                colAlertas.doc().set(datosDeAlerta)
+                .then( function() {
+                  console.log('Okeyyyy')
+                  CrearAlert()
+                  
+                 })
+                .catch( function(e) {
+                  console.log(e)
+
+                })
+
+              
+          
+          
+          } 
+
+          function CrearAlert(){
+            var db = firebase.firestore();
+            var colAlertas = db.collection('LostPetAlerts');
+            colAlertas.get()
+            .then(function(QuerySnapshot){
+              QuerySnapshot.forEach(function(doc){
+                console.log(doc.data())
+                Dueño = doc.data().Dueño;
+                NombreM = doc.data().NombreM; 
+                Mascota = doc.data().Mascosta;
+                Raza = doc.data().Raza;
+                Color = doc.data().Color;
+                Collar= doc.data().Collar;
+                Localidad= doc.data().Localidad;
+                Direccion=doc.data().Direccion;
+
+                if(doc.data().Dueño == claveDeColeccion){
+
+               
+                  
+                  cordova.plugins.notification.local.schedule({
+                    title: 'Animal perdido por tu zona',
+                    text:'Ayuda a : ' + Dueño +  ' a encontrar su mascota ♥  ' , 
+                    
+                    
+                   
+                   
+                    
+                
+
+                    foreground: true
+                });
+
+                    
 
 
+                }
+              })
 
 
+              })
+        
+             }
+
+             function fnMuestraMP(){
+              var db = firebase.firestore();
+              var colAlertas = db.collection('LostPetAlerts');
+              colAlertas.get()
+              .then(function(QuerySnapshot){
+                QuerySnapshot.forEach(function(doc){
+                  console.log(doc.data())
+                  Dueño = doc.data().Dueño;
+                  NombreM = doc.data().NombreM; 
+                  Mascota = doc.data().Mascosta;
+                  Raza = doc.data().Raza;
+                  Color = doc.data().Color;
+                  Collar= doc.data().Collar;
+                  Localidad= doc.data().Localidad;
+                  Direccion=doc.data().Direccion;
+  
+                  
+  
+                    $$('.page-content-mascotasP')
+                    .append(
+                      `
+                      <div class="contendorM">
+                            
+                          <h1 id="Titulo">¡Me perdí!</h1>
+                          <img src=" " alt="" id="foto">
+                          <h3 id="lugar">`+ Localidad + `</h3>
+                          <h4 id="Calle"> `+ Direccion +`</h4>
+                          <h4 id="NombreMM">` + NombreM + ` </h4>
+                          <h4 id="raza"> ` + Raza + `</h4>
+                          <h4 id="Num">` + Dueño +`</h4>
+                  
+                       </div>  
+                  
+                      
+                      
+                      `
+              
+                    )
+              
+                  
+                })
+               })
+             }
+            
+            function AlertaN(){
+              var db = firebase.firestore();
+              var coleMayuda = db.collection('coleMayuda');
+              
+              var lurgar=$$('#lugarr').val();
+              var lurga2=$$('#lugar2').val();
+              var mascotita=$$('#mascotita').val();
+              var extra=$$('#extraa').val();
+              claveDeColeccion=email
+              console.log(lurgar)
+              console.log(lurga2)
+              console.log(mascotita)
+              console.log(extra)
+             
+              datitos={
+
+                Localidad: lurgar,
+                Altura : lurga2,
+                mascota: mascotita, 
+                extra: extra,
+                id: claveDeColeccion, 
+              }
+                
+
+                coleMayuda.doc().set(datitos)
+                .then( function() {
+                  console.log('Enviando...')
+                  CrearAlert2()
+                  
+                 })
+                .catch( function(e) {
+                  console.log(e)
+
+                })
+
+              
+            } 
+
+            function CrearAlert2(){
+              var db = firebase.firestore();
+              var coleMayuda = db.collection('coleMayuda');
+              coleMayuda.get()
+              .then(function(QuerySnapshot){
+                QuerySnapshot.forEach(function(doc){
+                  console.log(doc.data())
+                  Localidad=doc.data().Localidad;
+                  Altura=doc.data().Altura;
+                  mascota=doc.data().mascota;
+                  extra=doc.data().extra;
 
 
+                  cordova.plugins.notification.local.schedule({
+                    title: 'Una mascota necesita ayuda URGENTE',
+                    text:'Hay un '+ mascota + ' que necesita ayuda en : ' + Localidad + ' , '+  Altura + '', 
+                    
+                    
+                   
+                   
+                    
+                
+
+                    foreground: true
+                });
+
+
+                })
+              })
+
+            }
+
+            
+            function AlertaAu(claveDeColeccion){
+              var db = firebase.firestore();
+              var ColAuto = db.collection('ColAuto');
+
+              var AutoLugar= $$('#Autolugar').val();
+              var AutoCalle= $$('#AutoCalle').val();
+
+              claveDeColeccion=email;
+
+              DatosAuto={
+                AutoLugar: AutoLugar,
+                AutoCalle: AutoCalle,
+                Id : claveDeColeccion,
+              }
+
+              ColAuto.doc().set(DatosAuto)
+              .then( function() {
+                firebase.firestore().collection('ColAuto')
+                .onSnapshot(function(Query){
+                  Query.forEach(function(doc){
+                    AutoLugar=doc.data().AutoLugar
+                    AutoCalle=doc.data().AutoCalle
+
+                    
+                      
+                      cordova.plugins.notification.local.schedule({
+                        title: 'Necesito un auto!',
+                        text:'Estoy en : ' + AutoLugar + ',' + AutoCalle , 
+                        
+                        
+                       
+                       
+                        
+                    
+    
+                        foreground: true
+                    });
+                   
+                  })
+           
+
+                
+                
+               })
+              })
+              .catch( function(e) {
+                console.log(e)
+
+              })
+
+
+             
+            }
+          
+            
+
+            
+           
+             function uploadprofile(){
+              
+            
+
+              var file  = $$('#perfil')[0].files[0];
+              
+              var storageRef = storage.ref('/FotosU');
+              storageRef.put(file);
+
+              
+            }
+          
+           
 
 
    
+
+              
+
+
+
+
+
+             
     
 
 
@@ -632,3 +837,5 @@ function fnchat(){
 
 
 
+ 
+ 

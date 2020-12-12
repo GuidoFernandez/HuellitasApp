@@ -8,15 +8,9 @@
                    <img id="fotoPerfil" src="/img/panel.png" alt="">
                    <li><h3 id="nombreUsuario"></h3></li>
                   <li><a href="/principal/">Inicio</a></li>
+                  <li><a href="/Mperdidas/">Mascotas Perdidas</a></li>
                   <li><a href="#">¿Como ayudar a los refugios?</a></li>
                   <li><a href="#">¿Que es ser "Trancito"?</a></li>
-                  <li></li>
-                  <li></li>
-                  <li></li>
-                  <li></li>
-                  <li></li>
-                  <li></li>
-                  <li></li>
                   <li><a id="logout" >Cerrar sesion</a></li>
                 </ul>
               </div>
@@ -74,11 +68,139 @@
    
     <div class="page-content principal">
          
+        
       <div class="block row ">
         <div class="row">
-          <button class="col-50 button button-outline" id="PerdiMiMascota">Button</button>
-          <button class="col-50 button button-outline" id="AnimalNecesitaAyuda">Button</button>
-         
+    
+          <button class="col-100 button button-outline estilo" id="PerdiMiMascota" > <a class="button popup-open"  data-popup=".popup-alertaP"> Perdi a mi mascota! </a> </button>
+          <button class="col-100 button button-outline estilo" id="AnimalNecesitaAyuda"><a class="button popup-open"  data-popup=".popup-push">Una mascota necesita ayuda!</a></button>
+                  
+        </div> 
+      </div>
+
+    </div>
+
+
+      <!-- Alerta de mascota perdida  -->
+    <div class="popup popup-alertaP">
+      <div class="block">
+        <div class="block-title">Inserte informacion de tu mascosta!</div>
+        <div class="list inset">
+          <ul>
+            <li class="item-content item-input">
+              <div class="item-inner">
+                <div class="item-input-wrap">
+                  <input type="text" placeholder="¿A qué nombre responde?" id="NombreM">
+                  <span class="input-clear-button"></span>
+                </div>
+              </div>
+            </li>
+            <li class="item-content item-input">
+              <div class="item-inner">
+                <div class="item-input-wrap">
+                  <input type="text" placeholder="¿Perro o gato?" id="Mascosta">
+                  <span class="input-clear-button"></span>
+                </div>
+              </div>
+            </li>
+            <li class="item-content item-input">
+              <div class="item-inner">
+                <div class="item-input-wrap">
+                  <input type="text" placeholder="Raza" id="Raza">
+                  <span class="input-clear-button"></span>
+                </div>
+              </div>
+            </li>
+            <li class="item-content item-input">
+              <div class="item-inner">
+                <div class="item-input-wrap">
+                  <input type="text" placeholder="Color" id="ColorP">
+                  <span class="input-clear-button"></span>
+                </div>
+              </div>
+            </li>
+            <li class="item-content item-input">
+              <div class="item-inner">
+                <div class="item-input-wrap">
+                  <input type="text" placeholder="¿Tiene collar?" id="Collar">
+                  <span class="input-clear-button"></span>
+                </div>
+              </div>
+            </li>
+            <li class="item-content item-input">
+              <div class="item-inner">
+                <div class="item-input-wrap">
+                  <input type="text" placeholder="Localidad" id="Localidad">
+                  <span class="input-clear-button"></span>
+                </div>
+              </div>
+            </li>
+            <li class="item-content item-input">
+              <div class="item-inner">
+                <div class="item-input-wrap">
+                  <input type="text" placeholder="Direccion" id="Direccion">
+                  <span class="input-clear-button"></span>
+                </div>
+              </div>
+            </li>
+            <li class="item-content item-input">
+              <div class="item-inner">
+                <div class="item-input-wrap">
+                  <input type="file" placeholder="Añadir foto" id="archivo">
+                  <span class="input-clear-button"></span>
+                </div>
+              </div>
+            </li>
+
+          </ul>
+        </div>
+      </div>
+      <p><a class="link popup-close" id="AlertaP">Enviar alerta!</a></p>
+    </div>
+       
+    
+      <!-- Alerta de una mascota necesita ayuda   -->
+      <div class="popup popup-push">
+        <div class="block">
+          <div class="block-title">Inserte informacion de la mascota que necesita ayuda!</div>
+          <div class="list inset">
+            <ul>
+              <li class="item-content item-input">
+                <div class="item-inner">
+                  <div class="item-input-wrap">
+                    <input type="text" placeholder="¿En que localidad se encuentra?" id="lugarr">
+                    <span class="input-clear-button"></span>
+                  </div>
+                </div>
+              </li>
+              <li class="item-content item-input">
+                <div class="item-inner">
+                  <div class="item-input-wrap">
+                    <input type="text" placeholder="Calle y altura" id="lugar2">
+                    <span class="input-clear-button"></span>
+                  </div>
+                </div>
+              </li>
+              <li class="item-content item-input">
+                <div class="item-inner">
+                  <div class="item-input-wrap">
+                    <input type="text" placeholder="¿Que mascota es?" id="mascotita">
+                    <span class="input-clear-button"></span>
+                  </div>
+                </div>
+              </li>
+              <li class="item-content item-input">
+                <div class="item-inner">
+                  <div class="item-input-wrap">
+                    <input type="text" placeholder="Informacion extra!" id="extraa">
+                    <span class="input-clear-button"></span>
+                  </div>
+                </div>
+              </li>
+            
+          
+          <p><a class="link popup-close" id="AlertaN">Enviar alerta</a></p>
+          
         </div>
       </div>
 
