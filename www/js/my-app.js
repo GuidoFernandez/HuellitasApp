@@ -40,12 +40,20 @@ var app = new Framework7({
         url: 'chat.html'
       },
       {
+        path:'/chat2/',
+        url: 'chat2.html'
+      },
+      {
         path:'/principalRefu/',
         url: 'principalRefu.html'
       },
       {
         path:'/Mperdidas/',
         url: ' Mperdidas.html'
+      },
+      {
+        path:'/Mperdi/',
+        url: ' Mperdi.html'
       }
      
     ]
@@ -53,51 +61,25 @@ var app = new Framework7({
   });
 
 var mainView = app.views.create('.view-main');
-
 var email, NombreRefu;
-var latitud, longitud,  lugar, imagenesFBref;
+var latitud, longitud,  lugar;
+var fichero, ImagenStorageRef, downloadURL, ImagenesFBref;
 
 
 //principal deviceready
 $$(document).on('deviceready', function() {
     console.log("Device is ready!");
-    
+  
     $$('#iniciar').on('click', fniniciar);
 
-    var onSuccess = function(position) {
-      latitud= position.coords.latitude;
-      longitud= position.coords.longitude;
-
-     /**  alert('Latitude: '          + position.coords.latitude          + '\n' +
-            'Longitude: '         + position.coords.longitude         + '\n' +
-            'Altitude: '          + position.coords.altitude          + '\n' +
-            'Accuracy: '          + position.coords.accuracy          + '\n' +
-            'Altitude Accuracy: ' + position.coords.altitudeAccuracy  + '\n' +
-            'Heading: '           + position.coords.heading           + '\n' +
-            'Speed: '             + position.coords.speed             + '\n' +
-            'Timestamp: '         + position.timestamp                + '\n');
-            */
-  };
-
-  // onError Callback receives a PositionError object
-  //
-  function onError(error) {
-      alert('code: '    + error.code    + '\n' +
-            'message: ' + error.message + '\n');
-  }
-
-  navigator.geolocation.getCurrentPosition(onSuccess, onError);
    
-  var platform = new H.service.Platform({
-    'apikey': 'lrJdnUUTX28r2LywvXgPoalWJrPVu-za6vX_CHI2ls4'
-  });
-
-  var service = platform.getSearchService();
+  
 
 });
 //index
 $$(document).on('page:init', '.page[data-name="index"]', function (e) {
   console.log("registro");
+
   $$('#iniciar').on('click', fniniciar);
           
 })
@@ -166,6 +148,8 @@ $$(document).on('page:init', '.page[data-name="principalRefu"]', function (e) {
 $$(document).on('page:init', '.page[data-name="perfil"]', function (e) {
   console.log("Perfil");
   
+  
+
   $$('.popup-open').on('popup:open', function (e) {
     console.log('About popup open');
   });
@@ -185,11 +169,23 @@ $$(document).on('page:init', '.page[data-name="chat"]', function (e) {
 
  $$('#msg-btn').on('click', fnchat);
 });
+//chat
+$$(document).on('page:init', '.page[data-name="chat2"]', function (e) {
+
+ $$('#msg-btn').on('click', fnchat);
+});
 
 
 //Mascotas Perdidas 
 
 $$(document).on('page:init', '.page[data-name="Mperdidas"]', function (e) {
+  console.log('Mascotas perdidas')
+  
+  fnMuestraMP();
+
+ });
+
+ $$(document).on('page:init', '.page[data-name="Mperdi"]', function (e) {
   console.log('Mascotas perdidas')
   
   fnMuestraMP();
@@ -423,11 +419,14 @@ function traerDatosRefugioPerfil(){
       .then(function(querySnapshot){
       querySnapshot.forEach(function(doc){
         nombreR=doc.data().nombreRefu;
-        //ft=doc.data().fotoRefu;
-        //email=doc.data().email;
+        instagram=doc.data().instagram;
+        facebook=doc.data().facebook;
+        email=doc.data().email;
         $$('.nombreUR').append("<p>" + nombreR + "</p>")
-        //$$('.emailP').append("<p>" + email + "</p>")
-        //$$('#fotoPerfil').attr('src', 'ft')
+       
+        $$('.redes').append(` <a class="link external" href=`+instagram+`><i class="fab fa-instagram col icon"></i></a>`)
+        $$('.redes').append(` <a class="link external" href=`+facebook+`><i class="fab fa-facebook-square col icon"></i></a>`)
+       
 
   })
   })
@@ -515,18 +514,7 @@ function fnchat(){
                   </li>
               </ul>`)
               }
-              else{
-                $$('.messages-content')
-                .append( 
-                  `
-                <ul id="messages">
-                <li class="msg my">
-                    <span  class="sapn">
-                        <i class="name ">`+ texto + ` </i> 
-                    </span>
-                </li>
-            </ul>`)
-              }
+            
                 }
             )}
             )}
@@ -802,25 +790,74 @@ function fnchat(){
              
             }
           
-            
+            function uploadprofile(){
+              fichero = document.getElementById('fichero');
+             
+              uploadprofiledos();
 
+              ImagenStorageRef = firebase.storage().ref().child('imagenes');
+              
             
            
-             function uploadprofile(){
-              
-            
-
-              var file  = $$('#perfil')[0].files[0];
-              
-              var storageRef = storage.ref('/FotosU');
-              storageRef.put(file);
-
-              
             }
-          
+            
+
+            function uploadprofiledos(){
+              ImagenStorageRef=firebase.storage().ref().child('imagenes');
+              
+              
+              var ImagenASubir=fichero.files[0];
+
+              var uploadTask=ImagenStorageRef.child('/imagenes' + ImagenASubir.name).put(ImagenASubir);
+
+              uploadTask.on('state_changed' ,
+              
+              function(snapshot){
+
+              }, function(Error){
+                  console.log(Error)
+                 
+              }, function(){
+                console.log('Archivo o imagen subida a firebase')
+
+                var downloadURL = uploadTask.snapshot.downloadURL;
+                
+
+                ImagenStorageRef.child('/imagenes').getDownloadURL().then(function(url) {
+                  // `url` is the download URL for 'images/stars.jpg'
+                
+                  // This can be downloaded directly:
+                  var xhr = new XMLHttpRequest();
+                  xhr.responseType = 'blob';
+                  xhr.onload = function(event) {
+                    var blob = xhr.response;
+                  };
+                  xhr.open('GET', url);
+                  xhr.send();
+                
+                  // Or inserted into an <img> element:
+                  var img = document.getElementById('fotoPerfilU');
+                  img.src = url;
+                }).catch(function(error) {
+                  // Handle any errors
+                });
+                
+              });
+            
+             
+             
+            }
+               
+              
+           
+             
+            
+            
+            
+            
            
 
-
+          
    
 
               
@@ -832,7 +869,8 @@ function fnchat(){
              
     
 
-
+/* 
+ */
 
 
 

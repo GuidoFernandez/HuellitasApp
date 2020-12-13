@@ -289,7 +289,8 @@
   margin-top: 20%;
 }
 .page-content-mascotasP{
-  overflow-y: scroll
+  height: 90vh;
+  overflow: scroll;
 }
 .mascotasP{
   overflow-y: scroll;

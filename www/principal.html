@@ -8,7 +8,7 @@
                    <img id="fotoPerfil" src="/img/panel.png" alt="">
                    <li><h3 id="nombreUsuario"></h3></li>
                   <li><a href="/principal/">Inicio</a></li>
-                  <li><a href="/Mperdidas/">Mascotas Perdidas</a></li>
+                  <li><a href="/Mperdi/">Mascotas Perdidas</a></li>
                   <li><a href="#">¿Como ayudar a los refugios?</a></li>
                   <li><a href="#">¿Que es ser "Trancito"?</a></li>
                   <li><a id="logout" >Cerrar sesion</a></li>
@@ -28,16 +28,7 @@
                                
                                 <i class="fas fa-bars icono"></i></div>
                             </a>
-                            <form class="searchbar">
-                                <div class="searchbar-inner">
-                                  <div class="searchbar-input-wrap">
-                                    <input type="search" placeholder="Search">
-                                    <i class="searchbar-icon"></i>
-                                    <span class="input-clear-button"></span>
-                                  </div>
-                                  <span class="searchbar-disable-button if-not-aurora">Cancel</span>
-                                </div>
-                              </form>
+                           
                             
                             
                         <div class="title"></div>
@@ -50,21 +41,24 @@
         <div class="title"></div>
 
         <div class="toolbar tabbar tabbar-labels toolbar-bottom">
-            <div class="toolbar-inner">
-            <a href="/chat/" class="tab-link tab-link-active">
-              <i class="icon icon-fill f7-icons if-not-md">envelope_fill<span class="badge color-green">5</span></i>
-              <i class="icon material-icons md-only">email<span class="badge color-green">5</span></i>
-              <span class="tabbar-label">msg</span>
-            </a>
-           
-            <a href="#tab-3" class="tab-link">
-              <i class="icon f7-icons if-not-md">cloud<span class="badge color-red">1</span></i>
-              <i class="icon material-icons md-only">file_upload<span class="badge color-red">1</span></i>
-              <span class="tabbar-label">Upload</span>
-            </a>
-            </div>
+          <div class="toolbar-inner">
+          <a href="/chat2/" class="tab-link tab-link-active">
+            <i class="icon icon-fill f7-icons if-not-md">envelope_fill<span class="badge color-green">5</span></i>
+            <i class="icon material-icons md-only">email<span class="badge color-green">5</span></i>
+            <span class="tabbar-label">Inbox</span>
+          </a>
+          <a href="/principal/" class="tab-link">
+            <i class="fas fa-home"></i>Home<span class="badge color-red"></span></i>
+            
+            <span class="tabbar-label">Home</span>
+          </a>
+          <a href="/Mperdi/" class="tab-link">
+            <i class="fas fa-exclamation-triangle"></i>Alerts<span class="badge color-red"></span></i>
+            
+            <span class="tabbar-label">Alerts</span>
+          </a>
           </div>
-        
+        </div>
    
     <div class="page-content principal">
          
@@ -72,8 +66,8 @@
       <div class="block row ">
         <div class="row">
     
-          <button class="col-100 button button-outline estilo" id="PerdiMiMascota" > <a class="button popup-open"  data-popup=".popup-alertaP"> Perdi a mi mascota! </a> </button>
-          <button class="col-100 button button-outline estilo" id="AnimalNecesitaAyuda"><a class="button popup-open"  data-popup=".popup-push">Una mascota necesita ayuda!</a></button>
+          <button class="col-100 button button-outline estilo" id="PerdiMiMascota" > <a class=" popup-open"  data-popup=".popup-alertaP"> Perdi a mi mascota! </a> </button>
+          <button class="col-100 button button-outline estilo" id="AnimalNecesitaAyuda"><a class=" popup-open"  data-popup=".popup-push">Una mascota necesita ayuda!</a></button>
                   
         </div> 
       </div>
